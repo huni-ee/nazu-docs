@@ -1,0 +1,5 @@
+{
+  "title": "환경 준비",
+  "defaultOpen": true,
+  "pages": ["windows", "ubuntu", "rooted-android"]
+}

@@ -1,0 +1,267 @@
+.home {
+  /* 배경·글자·강조색은 global.css의 fumadocs 토큰을 따른다 */
+  --home-bg: var(--color-fd-background);
+  --home-text: var(--color-fd-foreground);
+  /* 라이트 색. 다크는 :global(.dark) .home에서 덮어쓴다 */
+  --home-muted: #625d53;
+  --home-border: #e3ded3;
+  --home-accent: var(--color-fd-primary);
+  --button-bg: var(--brand);
+  --button-text: var(--brand-ink);
+  --editor-bg: #ffffff;
+  --editor-foreground: #2b2721;
+  --editor-titlebar: #faf8f3;
+  --editor-tabs: #f4f1ea;
+  --editor-tab-active: #ffffff;
+  --editor-tab-ink: #3a362f;
+  /* 탭 진행선·흐름 그림·카드의 노란 선. 라이트는 흰 바탕 대비 3.6:1인 호박색 */
+  --accent-line: #b07d00;
+  --editor-tab-indicator: var(--accent-line);
+  --editor-border: #e4dfd4;
+  --editor-line: #857e72;
+  --flow-line: #d8d2c5;
+  --flow-dot: #6f695e;
+  /* 밝은 바탕에 묻히는 노란 점에 진한 갈색 테두리 */
+  --flow-reply-ring: rgb(59 42 32 / .6);
+  /* 코드 색. 문자열만 브랜드 호박색, 키워드는 청회색 */
+  --code-foreground: var(--editor-foreground);
+  --code-token-keyword: #4f5b75;
+  --code-token-string: #a15c00;
+  --code-token-string-expression: #a15c00;
+  --code-token-function: #14120f;
+  --code-token-constant: var(--editor-foreground);
+  --code-token-parameter: var(--editor-foreground);
+  --code-token-punctuation: #857e72;
+  --code-token-comment: #857e72;
+  --code-token-link: var(--home-accent);
+  min-width: 0;
+  min-height: calc(100svh - 56px);
+  display: flex;
+  flex-direction: column;
+  background: var(--home-bg);
+  color: var(--home-text);
+}
+:global(.dark) .home {
+  --accent-line: var(--brand);
+  --home-muted: #a3a3a3;
+  --home-border: #2c2c2c;
+  --editor-bg: #171717;
+  --editor-foreground: #dedede;
+  --editor-titlebar: #1c1c1c;
+  --editor-tabs: #191919;
+  --editor-tab-active: #171717;
+  --editor-tab-ink: #dedede;
+  --editor-border: #2e2e2e;
+  --editor-line: #858585;
+  --flow-line: #3a3a3a;
+  --flow-dot: #c4c4c4;
+  --flow-reply-ring: transparent;
+  --code-token-keyword: #9a9a9a;
+  --code-token-string: var(--brand);
+  --code-token-string-expression: var(--brand);
+  --code-token-function: #ffffff;
+  --code-token-punctuation: #8a8a8a;
+  --code-token-comment: #808080;
+}
+.main { flex: 1; }
+.container { width: min(100%, 1280px); margin: 0 auto; padding: 0 48px; }
+/* 히어로 띠. 라이트는 가운데를 희게 밝히고 왼쪽 아래에 노란빛 */
+.heroBand {
+  --glow-color: rgb(253 216 53 / .5);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--home-border);
+  background:
+    radial-gradient(70% 90% at 62% 30%, rgb(255 255 255 / .95), transparent 72%),
+    var(--home-bg);
+}
+/* 왼쪽 아래 노란빛 */
+.heroBand::before { content: ''; position: absolute; bottom: 0; left: 0; width: 760px; height: 760px; border-radius: 50%; background: radial-gradient(closest-side, var(--glow-color), transparent); pointer-events: none; translate: -50% 50%; }
+.heroBand > * { position: relative; }
+.heroBand .codePanel { box-shadow: 0 1px 2px rgb(59 42 32 / .05), 0 24px 48px -28px rgb(59 42 32 / .35); }
+.heroBand .command { background: rgb(255 255 255 / .7); }
+:global(.dark) .heroBand .codePanel { box-shadow: none; }
+:global(.dark) .heroBand .command { background: none; }
+/* 다크는 왼쪽 아래 노란빛, 오른쪽 위 옅은 빛 */
+:global(.dark) .heroBand {
+  --glow-color: rgb(253 216 53 / .2);
+  --home-text: #f0eeea;
+  --home-muted: #a8a6a1;
+  --home-border: #33312d;
+  --home-accent: var(--brand);
+  border-bottom: 1px solid #262421;
+  background:
+    radial-gradient(90% 70% at 95% -20%, rgb(255 255 255 / .07), transparent 60%),
+    linear-gradient(#0d0d0d, #151310);
+  color: var(--home-text);
+}
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: clamp(46px, 6vw, 90px);
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: 76px 48px 80px;
+}
+.intro, .example { min-width: 0; }
+.intro h1 { margin: 0; font-size: clamp(48px, 5vw, 70px); font-weight: 750; line-height: 1.15; letter-spacing: -.045em; word-break: keep-all; }
+.tagline { margin: 16px 0 0; font-size: 18px; font-weight: 600; letter-spacing: -.02em; word-break: keep-all; }
+.description { max-width: 390px; margin: 10px 0 0; color: var(--home-muted); font-size: 15px; line-height: 1.9; word-break: keep-all; }
+.description a { color: var(--home-text); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--home-text) 35%, transparent); text-underline-offset: 3px; transition: color 160ms ease, text-decoration-color 160ms ease; }
+.description a:hover { color: var(--home-accent); text-decoration-color: currentColor; }
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.primaryButton, .secondaryButton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 999px; font-size: 15px; font-weight: 600; transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease; }
+.primaryButton { padding: 0 22px 0 24px; background: var(--button-bg); color: var(--button-text); box-shadow: 0 10px 30px -12px rgb(253 216 53 / .55); }
+.primaryButton svg { transition: transform 160ms ease; }
+.primaryButton:hover { background: color-mix(in srgb, var(--button-bg) 86%, white); box-shadow: 0 12px 34px -12px rgb(253 216 53 / .75); }
+.primaryButton:hover svg { transform: translateX(3px); }
+.secondaryButton { padding: 0 20px 0 22px; border: 1px solid color-mix(in srgb, var(--home-text) 20%, transparent); color: var(--home-text); }
+.secondaryButton:hover { border-color: color-mix(in srgb, var(--home-text) 38%, transparent); background: color-mix(in srgb, var(--home-text) 6%, transparent); }
+.primaryButton:active, .secondaryButton:active { transform: translateY(1px); }
+.install { margin-top: 34px; }
+.command { display: inline-flex; min-height: 42px; max-width: 100%; border: 1px solid var(--home-border); border-radius: 12px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+.command code { align-self: center; padding: 0 14px; color: var(--home-text); font-size: 13px; white-space: nowrap; }
+.command code span { margin-right: 4px; color: var(--home-muted); }
+.command button, .codeCopy { display: grid; place-items: center; width: 39px; cursor: pointer; }
+.command button { width: 42px; border-left: 1px solid var(--home-border); border-radius: 0 11px 11px 0; color: var(--home-muted); transition: background-color 160ms ease, color 160ms ease; }
+.command button:hover { background: color-mix(in srgb, var(--home-text) 6%, transparent); color: var(--home-text); }
+.requirement { margin: 10px 0 0; color: var(--home-muted); font-size: 11px; }
+.requirement span { padding: 0 3px; }
+.codePanel { overflow: hidden; border: 1px solid var(--editor-border); border-radius: 10px; background: var(--editor-bg); color: var(--editor-foreground); }
+.windowBar { position: relative; display: flex; align-items: center; justify-content: space-between; height: 44px; border-bottom: 1px solid var(--editor-border); background: var(--editor-titlebar); }
+.windowControls { display: flex; gap: 7px; padding-left: 15px; }
+.windowControls span { width: 10px; height: 10px; border: 1px solid rgb(0 0 0 / .12); border-radius: 50%; }
+.windowControls span:nth-child(1) { background: #ff6058; }
+.windowControls span:nth-child(2) { background: #ffbd2e; }
+.windowControls span:nth-child(3) { background: #28c840; }
+.windowTitle { position: absolute; left: 50%; transform: translateX(-50%); color: var(--editor-tab-ink); font-size: 11px; opacity: .8; white-space: nowrap; }
+.windowTitle span { padding: 0 3px; opacity: .6; }
+.codeCopy { height: 100%; color: var(--editor-tab-ink); opacity: .7; }
+.codeCopy:hover { opacity: 1; }
+.exampleTabs { display: flex; overflow-x: auto; background: var(--editor-tabs); border-bottom: 1px solid var(--editor-border); }
+.exampleTabs button { position: relative; flex: none; min-height: 39px; padding: 0 13px; border-top: 1px solid transparent; border-right: 1px solid var(--editor-border); color: var(--editor-tab-ink); cursor: pointer; font-size: 12px; opacity: .72; white-space: nowrap; }
+.exampleTabs button:hover { opacity: 1; }
+.exampleTabs button.activeTab { box-shadow: inset 0 2px 0 var(--editor-tab-indicator); background: var(--editor-tab-active); opacity: 1; }
+.tabProgress { display: none; }
+.codeBody { position: relative; padding: 20px 18px; }
+/* 가려진 코드가 있는 쪽 가장자리를 흐리게 */
+.codeBody::before, .codeBody::after { content: ''; position: absolute; right: 18px; left: 18px; height: 46px; opacity: 0; pointer-events: none; transition: opacity 160ms ease; }
+.codeBody::before { top: 20px; background: linear-gradient(var(--editor-bg), transparent); }
+.codeBody::after { bottom: 20px; background: linear-gradient(transparent, var(--editor-bg)); }
+.codeBody[data-more-above]::before, .codeBody[data-more-below]::after { opacity: 1; }
+.codeBody pre { overflow-x: auto; margin: 0; font: 12px/1.9 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.codeLine { display: flex; min-width: max-content; white-space: pre; }
+.lineNumber { width: 32px; flex: none; color: var(--editor-line); user-select: none; }
+.codeFooter { display: flex; justify-content: space-between; align-items: center; min-height: 33px; padding: 0 15px; border-top: 1px solid var(--editor-border); color: var(--editor-foreground); opacity: .75; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }
+.exampleCaption { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 13px 1px 0; color: var(--home-muted); font-size: 12px; }
+.exampleCaption a { display: inline-flex; align-items: center; gap: 4px; color: var(--home-text); }
+.exampleCaption a:hover { color: var(--home-accent); }
+/* 동작 방식 그림. 받은 메세지(회색 점)는 오른쪽으로 가고 응답(노란 점)은 같은 길로 돌아온다 */
+.flowSection { padding: 56px 0 60px; }
+.flowHeading { display: flex; align-items: end; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; }
+.flowLegend { display: flex; gap: 16px; color: var(--home-muted); font-size: 12px; }
+.flowLegend span { display: inline-flex; align-items: center; gap: 6px; }
+.flowLegend span::before, .flowLink i::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--flow-dot); }
+.flowLegend span:last-child::before, .flowLink i:last-of-type::before { background: var(--brand); box-shadow: 0 0 0 1px var(--flow-reply-ring); }
+.flow { display: flex; align-items: stretch; margin-top: 36px; }
+.flowGroup { position: relative; display: flex; flex: 1 1 auto; align-items: stretch; padding: 24px 20px; border: 1px dashed var(--flow-line); border-radius: 10px; }
+.flowGroupLabel { position: absolute; top: 0; left: 14px; padding: 0 7px; background: var(--home-bg); color: var(--home-muted); font-size: 12px; line-height: 1; translate: 0 -50%; }
+.flowNode { display: grid; flex: none; align-content: center; gap: 5px; min-width: 128px; padding: 13px 15px; border: 1px solid var(--home-border); border-radius: 8px; background: var(--editor-bg); }
+.flowNode strong { font-size: 14px; font-weight: 600; }
+.flowNode small { color: var(--home-muted); font-size: 12px; }
+.flowLink { position: relative; flex: 1; align-self: center; min-width: 24px; height: 1px; background: var(--flow-line); }
+.flowBridge { flex: .7 1 64px; min-width: 64px; }
+.flowBridge span { position: absolute; bottom: 9px; left: 50%; color: var(--home-muted); font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; translate: -50% 0; }
+/* i는 선을 덮는 투명한 레일. 레일을 자기 길이만큼 밀면 왼쪽 끝의 점이 선을 따라간다 */
+.flowLink i { position: absolute; inset: 0; opacity: 0; }
+.flowLink i::before { position: absolute; top: 50%; left: 0; width: 9px; height: 9px; translate: -50% -50%; }
+.docSection { padding: 50px 0 58px; border-top: 1px solid var(--home-border); }
+.docHeading h2, .flowHeading h2 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -.035em; }
+.docHeading p, .flowHeading p { margin: 10px 0 0; color: var(--home-muted); font-size: 14px; line-height: 1.8; word-break: keep-all; }
+.docLinks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 26px; }
+.docLink { display: flex; align-items: center; justify-content: space-between; gap: 15px; min-width: 0; padding: 20px 18px 20px 20px; border: 1px solid var(--home-border); border-radius: 14px; background: var(--editor-bg); color: var(--home-text); transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease; }
+.docLink:hover { border-color: color-mix(in srgb, var(--accent-line) 75%, var(--home-border)); box-shadow: 0 14px 30px -20px rgb(59 42 32 / .45); transform: translateY(-2px); }
+.docLink span { display: grid; gap: 7px; }
+.docLink strong { font-size: 14px; font-weight: 600; }
+.docLink small { color: var(--home-muted); font-size: 12px; line-height: 1.5; word-break: keep-all; }
+.docLink svg { flex: none; color: var(--home-muted); transition: transform 160ms ease, color 160ms ease; }
+.docLink:hover svg, .docLink:focus-visible svg { transform: translateX(3px); color: var(--home-accent); }
+.footer { width: min(calc(100% - 96px), 1184px); margin: 0 auto; padding: 26px 0 30px; border-top: 1px dashed var(--home-border); color: var(--home-muted); font-size: 12px; line-height: 1.8; text-align: center; word-break: keep-all; }
+.footer p { margin: 0; }
+/* 링크만 강조색. 라이트에서는 금색이 회색 글자와 잘 구분되지 않아 밑줄도 둔다 */
+.footer a { color: var(--home-accent); font-weight: 600; text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--home-accent) 40%, transparent); text-underline-offset: 3px; }
+.footer a:hover { text-decoration-color: currentColor; }
+:global(.dark) .footer a { font-weight: 500; text-decoration: none; }
+:global(.dark) .footer a:hover { text-decoration: underline; }
+.home :is(a, button):focus-visible { outline: 2px solid var(--home-accent); outline-offset: 3px; }
+/* 탭 줄과 코드 영역은 넘치는 부분을 자르므로 포커스 테두리를 안쪽에 그린다 */
+.exampleTabs button:focus-visible, .codeBody pre:focus-visible { outline: 2px solid var(--home-accent); outline-offset: -3px; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@media (max-width: 960px) {
+  /* 문서 링크 네 칸이 좁아지면 두 줄로 */
+  .docLinks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 850px) {
+  .container { padding: 0 32px; }
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 48px; padding: 58px 32px 70px; }
+  .intro { max-width: 520px; }
+  .example { width: min(100%, 680px); }
+  .footer { width: calc(100% - 64px); }
+  /* 좁은 화면에서는 흐름 그림을 세로로 세운다 */
+  .flow, .flowGroup { flex-direction: column; }
+  .flowGroup { padding: 22px 16px 16px; }
+  .flowNode { min-width: 0; }
+  .flowLink { flex: none; width: 1px; min-width: 0; height: 26px; }
+  .flowBridge { height: 44px; }
+  .flowBridge span { top: 50%; bottom: auto; left: 12px; translate: 0 -50%; }
+  .flowLink i::before { top: 0; left: 50%; }
+}
+@media (max-width: 540px) {
+  .container { padding: 0 20px; }
+  .hero { gap: 40px; padding: 48px 20px 56px; }
+  .intro h1 { font-size: clamp(42px, 10vw, 52px); }
+  .install { margin-top: 30px; }
+  .exampleTabs button { padding: 0 10px; }
+  .codeBody { padding: 18px 12px; }
+  .codeBody pre { font-size: 11px; }
+  .lineNumber { width: 26px; }
+  .docSection { padding: 40px 0 46px; }
+  .docLinks { grid-template-columns: minmax(0, 1fr); }
+  .footer { width: calc(100% - 40px); }
+}
+@keyframes tabProgress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* 7초 주기 중 앞 0.8초만 점이 보이며 이동한다. 선마다 시작을 늦춰 이어 달린다 */
+@keyframes flowIn { 0% { opacity: 0; translate: 0 0; } 1.5%, 10% { opacity: 1; } 11.4%, 100% { opacity: 0; translate: 100% 0; } }
+@keyframes flowOut { 0% { opacity: 0; translate: 100% 0; } 1.5%, 10% { opacity: 1; } 11.4%, 100% { opacity: 0; translate: 0 0; } }
+@keyframes flowInY { 0% { opacity: 0; translate: 0 0; } 1.5%, 10% { opacity: 1; } 11.4%, 100% { opacity: 0; translate: 0 100%; } }
+@keyframes flowOutY { 0% { opacity: 0; translate: 0 100%; } 1.5%, 10% { opacity: 1; } 11.4%, 100% { opacity: 0; translate: 0 0; } }
+@keyframes flowPulse { 0%, 10%, 100% { border-color: var(--home-border); box-shadow: 0 0 0 0 transparent; } 2%, 6% { border-color: var(--accent-line); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-line) 28%, transparent); } }
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes revealCode { from { opacity: .6; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+  .codeBody { animation: revealCode 220ms ease-out; }
+  /* 받은 메세지는 선 0 → 1 → 2, 응답은 2 → 1 → 0 순서 */
+  .flowLink i { animation: flowIn 7s linear calc(var(--i) * .8s) infinite backwards; }
+  .flowLink i:last-of-type { animation-name: flowOut; animation-delay: calc(3.2s + (2 - var(--i)) * .8s); }
+  /* 메세지가 봇 코드에, 응답이 카카오톡에 닿을 때 테두리를 잠깐 노랗게 */
+  .flowEnd { animation: flowPulse 7s ease-out 2.3s infinite backwards; }
+  .flowStart { animation: flowPulse 7s ease-out 5.5s infinite backwards; }
+}
+@media (max-width: 850px) and (prefers-reduced-motion: no-preference) {
+  .flowLink i { animation-name: flowInY; }
+  .flowLink i:last-of-type { animation-name: flowOutY; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  /* 탭 자동 전환. 표시선이 다 차면 다음 탭으로 넘어간다 */
+  .codePanel .exampleTabs button.activeTab { box-shadow: inset 0 2px 0 color-mix(in srgb, var(--editor-tab-indicator) 28%, transparent); }
+  .tabProgress { display: block; position: absolute; top: 0; right: 0; left: 0; height: 2px; background: var(--editor-tab-indicator); transform-origin: left; animation: tabProgress 7s linear forwards; }
+  /* 마우스를 올렸거나 화면 밖이면 멈춘다 */
+  .codePanel:hover .tabProgress, .codePanel[data-offscreen] .tabProgress { animation-play-state: paused; }
+  /* 키보드 포커스 중에도 멈춘다. 클릭으로 생긴 포커스는 :focus-visible이 아니라서 계속 넘어간다 */
+  .codePanel:has(:focus-visible) .tabProgress { animation-play-state: paused; }
+}
+@media (hover: hover) {
+  /* 탭이 바뀌어도 아래 내용이 밀리지 않게 코드 영역 높이를 고정한다 */
+  .codeBody pre { height: calc(var(--visible-lines) * 1lh); overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--editor-line) transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .docLink, .docLink svg, .primaryButton, .secondaryButton, .primaryButton svg { transition: none; } }

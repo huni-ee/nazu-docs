@@ -1,0 +1,155 @@
+---
+title: 루팅된 Android 기기
+description: 루팅된 Android 기기에서 Arisa와 code-server를 준비합니다.
+---
+
+루팅된 Android 기기에 Termux와 Arisa를 설치합니다. 이후 code-server를 실행하고 Tailscale로 연결하면 다른 네트워크에 있는 기기의 브라우저에서도 코드를 작성할 수 있습니다.
+
+## 준비물
+
+- 루팅되어 `su` 권한을 사용할 수 있는 Android 기기
+- 카카오톡이 설치되고 로그인된 계정
+- [F-Droid에서 설치한 Termux](https://f-droid.org/packages/com.termux/)
+- Tailscale을 설치할 다른 기기
+
+## 1. Termux 준비
+
+휴대폰에서 Termux를 열고 패키지를 업데이트한 뒤 ADB와 다운로드 도구를 설치합니다.
+
+```sh
+pkg update && pkg upgrade
+pkg install android-tools wget
+```
+
+## 2. Arisa 스크립트 다운로드
+
+Termux에서 [Arisa](https://github.com/huni-ee/arisa2)의 제어 스크립트를 내려받습니다.
+
+```sh
+wget https://github.com/huni-ee/arisa2/releases/latest/download/arisa_control
+chmod +x arisa_control
+```
+
+## 3. 휴대폰을 ADB에 연결
+
+Termux에서 루트 셸을 실행하고 권한 요청이 나타나면 허용합니다.
+
+```sh
+su
+```
+
+루트 셸에서 다음 명령으로 ADB의 TCP 포트를 설정하고 ADB 서비스를 다시 시작합니다.
+
+```sh
+setprop service.adb.tcp.port 5555
+stop adbd
+start adbd
+exit
+```
+
+<Callout type="warning" title="주의">
+  이 설정은 ADB 포트 `5555`를 네트워크에 노출할 수 있습니다. 외부에 포트 포워딩하지 말고, 방화벽 등으로 다른 기기의 접근을 제한하세요.
+</Callout>
+
+Termux로 돌아와 이 휴대폰에 연결합니다.
+
+```sh
+adb connect 127.0.0.1:5555
+adb devices
+```
+
+ADB 셸에서도 루트 권한을 사용할 수 있는지 확인합니다.
+
+```sh
+adb shell su root id
+```
+
+결과에 `uid=0`이 표시되어야 합니다. 루트 관리 앱에서 권한 요청이 나타나면 확인하세요. 연결이나 권한 확인에 실패하면 다음 단계로 진행하지 말고 기기의 ADB와 루팅 설정을 확인하세요.
+
+## 4. Arisa 설치 및 실행
+
+목록에 `127.0.0.1:5555`가 `device` 상태로 표시되는지 확인합니다. `arisa_control`을 내려받은 폴더에서 Arisa를 설치하고 실행합니다.
+
+```sh
+./arisa_control install
+./arisa_control start
+```
+
+실행 상태는 다음 명령으로 확인할 수 있습니다.
+
+```sh
+./arisa_control status
+```
+
+설정을 변경하려면 다음 명령을 사용합니다.
+
+```sh
+./arisa_control config
+```
+
+기기가 여러 개 연결되어 있으면 목록에서 이 휴대폰을 선택합니다.
+
+## 5. code-server 설치
+
+Termux에서 코드를 고치기 불편하다면 code-server를 설치하세요. 다른 기기의 브라우저에서 휴대폰의 코드를 수정할 수 있습니다.
+
+Termux에서 저장소를 추가하고 code-server를 설치합니다.
+
+```sh
+pkg install tur-repo
+pkg install code-server
+```
+
+처음 실행하면 설정 파일이 만들어집니다.
+
+```sh
+code-server
+```
+
+초기 실행이 끝나면 `Ctrl + C`로 종료하고, 아래 명령으로 설정 파일을 수정합니다.
+
+```sh
+nano ~/.config/code-server/config.yaml
+```
+
+`bind-addr`을 `0.0.0.0:8080`으로 바꾸고, `password`에 원하는 비밀번호를 입력합니다. 비밀번호로 보호하려면 `auth: password`를 유지하세요.
+
+```yaml
+bind-addr: 0.0.0.0:8080
+auth: password
+password: "원하는-비밀번호"
+cert: false
+```
+
+다른 사람이 추측하기 어려운 비밀번호를 쓰고, 설정 파일은 공유하지 마세요.
+
+수정한 뒤 `Ctrl + O`와 Enter를 눌러 저장하고, `Ctrl + X`로 nano를 종료합니다. 그다음 code-server를 다시 실행합니다.
+
+```sh
+code-server
+```
+
+<Callout type="warning" title="주의">
+  이 주소는 같은 네트워크에서도 접속할 수 있으므로 비밀번호 인증을 유지하고, 공유기에서 `8080` 포트를 외부에 열지 마세요.
+</Callout>
+
+code-server는 실행 중인 Termux 세션이 종료되거나 `Ctrl + C`를 누르면 멈춥니다. Android의 배터리 관리로 백그라운드 프로세스가 종료될 수도 있으므로 연결이 끊기면 Termux와 code-server가 실행 중인지 확인하세요.
+
+## 6. Tailscale로 접속
+
+1. 봇을 실행하는 휴대폰에 [Tailscale Android 앱](https://tailscale.com/download/android)을 설치하고 로그인한 뒤 VPN 연결을 허용합니다.
+2. 접속할 PC나 다른 기기에도 [Tailscale](https://tailscale.com/download)을 설치하고 같은 네트워크에 로그인합니다.
+3. Tailscale 앱 또는 [기기 목록](https://login.tailscale.com/admin/machines)에서 봇 휴대폰의 Tailscale IPv4 주소를 확인합니다.
+4. 다른 기기의 브라우저에서 `http://휴대폰의-Tailscale-IP:8080`에 접속하고, 설정한 code-server 비밀번호를 입력합니다.
+
+두 기기가 서로 다른 인터넷에 연결되어 있어도 Tailscale이 연결되어 있다면 접속할 수 있습니다. 연결되지 않는다면 휴대폰에서 code-server가 실행 중인지와 Tailscale 연결 상태 및 접근 설정을 확인하세요.
+
+<Callout type="info" title="안내">
+  Termux의 code-server에서는 일부 확장 프로그램이 설치되거나 실행되지 않을 수 있습니다. 자세한 내용은 [code-server의 Termux 안내](https://coder.com/docs/code-server/termux)를 참고하세요.
+</Callout>
+
+준비가 끝나면 [사용 예제](/docs/examples)를 따라 Nazu로 봇을 만들어 보세요.
+
+## 참고 자료
+
+루팅된 휴대폰에서 Termux와 ADB를 준비하는 과정은 [Yellu님의 가이드](https://cafe.naver.com/devlobots/7697)를 참고했습니다.

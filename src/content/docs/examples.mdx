@@ -1,0 +1,83 @@
+---
+title: 사용 예제
+description: Nazu를 설치하고 !ping에 답하는 첫 봇을 실행합니다.
+---
+
+봇을 실행하려면 Arisa 서버가 실행 중이어야 합니다. 아직 준비하지 않았다면 [시작하기](/docs#시작하기)를 참고하세요.
+
+## Node.js와 npm 설치
+
+예제를 실행하려면 Node.js 24.11 이상이 필요합니다. npm은 Node.js를 설치할 때 함께 설치됩니다.
+
+### Windows
+
+1. [Node.js 다운로드 페이지](https://nodejs.org/en/download)에서 LTS 버전의 Windows 설치 프로그램을 내려받아 설치합니다.
+2. 설치가 끝나면 PowerShell을 다시 열고 버전을 확인합니다.
+
+```powershell
+node --version
+npm --version
+```
+
+### Ubuntu
+
+Ubuntu 터미널에서 다음 명령으로 Node.js 버전 관리 도구인 [nvm](https://github.com/nvm-sh/nvm)을 설치합니다.
+
+```sh
+sudo apt update
+sudo apt install -y curl
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.41.0/install.sh | bash
+```
+
+터미널을 다시 열거나 SSH로 다시 접속한 뒤 Node.js LTS 버전을 설치하고 확인합니다.
+
+```sh
+nvm install --lts
+node --version
+npm --version
+```
+
+## Nazu 설치
+
+Windows PowerShell 또는 Ubuntu 터미널에서 프로젝트 폴더를 만들고 `@huni_ee/nazu`를 설치합니다.
+
+```sh
+mkdir arisa-example
+cd arisa-example
+npm init -y
+npm pkg set type=module
+npm install @huni_ee/nazu
+npm install -D typescript tsx @types/node
+```
+
+`tsx`는 TypeScript 파일을 실행할 때 사용합니다.
+
+## 메세지에 응답하기
+
+프로젝트 폴더에 `index.ts` 파일을 만들고 다음 코드를 작성합니다. `!ping` 메세지에 `pong!`으로 응답하는 예제입니다.
+
+```ts title="index.ts"
+import { ArisaClient } from '@huni_ee/nazu';
+
+const client = new ArisaClient();
+
+client.on('message', async (chat, channel) => {
+  if (chat.text === '!ping') {
+    await channel.send('pong!');
+  }
+});
+
+await client.start();
+```
+
+Arisa 서버가 다른 기기에서 실행 중이라면 `new ArisaClient({ target: '서버 IP:3000' })`처럼 접근할 수 있는 주소를 지정하세요. 기본 주소는 `127.0.0.1:3000`입니다.
+
+프로젝트 폴더에서 봇을 실행합니다.
+
+```sh
+npx tsx index.ts
+```
+
+카카오톡에서 `!ping`을 보내 응답을 확인합니다. 종료하려면 터미널에서 `Ctrl + C`를 누릅니다.
+
+더 다양한 예제는 [arisa_bot](/docs/arisa_bot)에서 확인할 수 있습니다.
