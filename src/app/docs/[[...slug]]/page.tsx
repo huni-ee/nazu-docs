@@ -74,10 +74,9 @@ export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): P
 
   return {
     title: page.data.title,
-    description: page.data.description,
+    other: { description: page.data.description ?? siteConfig.description },
     openGraph: {
       title: `${siteConfig.docsName} | ${page.data.title}`,
-      description: page.data.description ?? siteConfig.description,
       images: [{ url: ogImageUrls.docs, width: 1200, height: 630, type: 'image/png' }],
     },
   };

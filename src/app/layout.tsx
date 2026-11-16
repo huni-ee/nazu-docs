@@ -17,7 +17,8 @@ export const metadata: Metadata = {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
   },
-  description: siteConfig.description,
+  // og:description, twitter:description으로 복사되지 않게 description 대신 other로 넣는다.
+  other: { description: siteConfig.description },
   keywords: siteConfig.keywords,
 };
 

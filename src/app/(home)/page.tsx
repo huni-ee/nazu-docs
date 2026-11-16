@@ -18,7 +18,6 @@ export const metadata: Metadata = {
   alternates: { canonical: siteConfig.url },
   openGraph: {
     title: `${siteConfig.docsName} | 공식 문서`,
-    description: siteConfig.description,
     url: siteConfig.url,
     images: [{ url: ogImageUrls.home, width: 1200, height: 630, type: 'image/png' }],
   },
